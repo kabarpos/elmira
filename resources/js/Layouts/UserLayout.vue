@@ -7,22 +7,16 @@
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link :href="route('admin.dashboard')">
+                                <Link :href="route('user.dashboard')">
                                     <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800" />
                                 </Link>
                             </div>
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('admin.dashboard')" :active="route().current('admin.dashboard')">
+                                <NavLink :href="route('user.dashboard')" :active="route().current('user.dashboard')">
                                     Dashboard
                                 </NavLink>
-                                
-                                <template v-if="$page.props.auth.user.roles.includes('super-admin')">
-                                    <NavLink :href="route('admin.users.index')" :active="route().current('admin.users.*')">
-                                        Users
-                                    </NavLink>
-                                </template>
                             </div>
                         </div>
 
@@ -69,7 +63,7 @@
                 <!-- Responsive Navigation Menu -->
                 <div :class="{'block': showingNavigationDropdown, 'hidden': !showingNavigationDropdown}" class="sm:hidden">
                     <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('admin.dashboard')" :active="route().current('admin.dashboard')">
+                        <ResponsiveNavLink :href="route('user.dashboard')" :active="route().current('user.dashboard')">
                             Dashboard
                         </ResponsiveNavLink>
                     </div>

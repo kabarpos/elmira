@@ -37,6 +37,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\HandleInertiaRequests::class,
+            \App\Http\Middleware\CheckUserRole::class,
         ],
 
         'api' => [
@@ -68,5 +69,6 @@ class Kernel extends HttpKernel
         'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         'role.redirect' => \App\Http\Middleware\RoleBasedRedirection::class,
+        'ensure.dashboard' => \App\Http\Middleware\EnsureUserInCorrectDashboard::class,
     ];
 }
