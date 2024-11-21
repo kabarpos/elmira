@@ -61,14 +61,12 @@
                             </template>
 
                             <template #content>
-                                <DropdownLink :href="route('profile.edit')">
+                                <DropdownLink :href="route('admin.profile.edit')">
                                     Profile
                                 </DropdownLink>
-                                <form @submit.prevent="logout">
-                                    <DropdownLink as="button">
-                                        Log Out
-                                    </DropdownLink>
-                                </form>
+                                <DropdownLink as="button" @click="logout">
+                                    Log Out
+                                </DropdownLink>
                             </template>
                         </Dropdown>
                     </div>
@@ -122,7 +120,7 @@
                 </div>
 
                 <div class="mt-3 space-y-1">
-                    <ResponsiveNavLink :href="route('profile.edit')">
+                    <ResponsiveNavLink :href="route('admin.profile.edit')">
                         Profile
                     </ResponsiveNavLink>
                     <ResponsiveNavLink as="button" @click="logout">
@@ -142,6 +140,7 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import ResponsiveNavButton from '@/Components/ResponsiveNavButton.vue';
 
 const props = defineProps({
     user: {

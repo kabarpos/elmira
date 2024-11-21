@@ -22,6 +22,17 @@ Route::middleware(['web', 'auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('User/Dashboard');
     })->middleware(\Spatie\Permission\Middleware\PermissionMiddleware::class . ':view dashboard')->name('user.dashboard');
+
+    // User Profile routes
+    Route::get('/profile', function () {
+        return Inertia::render('User/Profile/Edit', [
+            'mustVerifyEmail' => false,
+            'status' => session('status'),
+        ]);
+    })->name('user.profile.edit');
+
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('user.profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('user.profile.destroy');
 });
 
 // Admin routes
@@ -33,11 +44,15 @@ Route::middleware(['auth', 'web', \Spatie\Permission\Middleware\RoleMiddleware::
     
     // Role management routes
     Route::resource('roles', RoleController::class);
-});
 
-// Profile routes
-Route::middleware(['web', 'auth'])->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    // Admin Profile routes
+    Route::get('/profile', function () {
+        return Inertia::render('Admin/Profile/Edit', [
+            'mustVerifyEmail' => false,
+            'status' => session('status'),
+        ]);
+    })->name('profile.edit');
+
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });

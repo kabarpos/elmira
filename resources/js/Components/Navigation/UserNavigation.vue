@@ -16,7 +16,7 @@
                             Dashboard
                         </NavLink>
 
-                        <NavLink :href="route('profile.edit')" :active="route().current('profile.edit')">
+                        <NavLink :href="route('user.profile.edit')" :active="route().current('user.profile.edit')">
                             Profile
                         </NavLink>
 
@@ -42,14 +42,12 @@
                             </template>
 
                             <template #content>
-                                <DropdownLink :href="route('profile.edit')">
+                                <DropdownLink :href="route('user.profile.edit')">
                                     Profile
                                 </DropdownLink>
-                                <form @submit.prevent="logout">
-                                    <DropdownLink as="button">
-                                        Log Out
-                                    </DropdownLink>
-                                </form>
+                                <DropdownLink as="button" @click="logout">
+                                    Log Out
+                                </DropdownLink>
                             </template>
                         </Dropdown>
                     </div>
@@ -74,7 +72,7 @@
                     Dashboard
                 </ResponsiveNavLink>
 
-                <ResponsiveNavLink :href="route('profile.edit')" :active="route().current('profile.edit')">
+                <ResponsiveNavLink :href="route('user.profile.edit')" :active="route().current('user.profile.edit')">
                     Profile
                 </ResponsiveNavLink>
 
@@ -91,7 +89,7 @@
                 </div>
 
                 <div class="mt-3 space-y-1">
-                    <ResponsiveNavLink :href="route('profile.edit')">
+                    <ResponsiveNavLink :href="route('user.profile.edit')">
                         Profile
                     </ResponsiveNavLink>
                     <ResponsiveNavLink as="button" @click="logout">
@@ -110,6 +108,7 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import ResponsiveNavButton from '@/Components/ResponsiveNavButton.vue';
 
 const props = defineProps({
     user: {
