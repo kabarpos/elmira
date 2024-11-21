@@ -7,6 +7,7 @@ use Database\Seeders\PermissionSeeder;
 use Database\Seeders\RoleAndPermissionSeeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\RolesAndPermissionsSeeder;
+use Database\Seeders\SiteSettingsSeeder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -22,6 +23,7 @@ class DatabaseSeeder extends Seeder
             RolesAndPermissionsSeeder::class,
             PermissionSeeder::class,
             UserSeeder::class,
+            SiteSettingsSeeder::class,
         ]);
     }
 }
