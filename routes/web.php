@@ -16,9 +16,10 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    // User dashboard route
     Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+        return Inertia::render('User/Dashboard');
+    })->name('user.dashboard')->middleware('role:user');
 
     Route::prefix('admin')
         ->name('admin.')
