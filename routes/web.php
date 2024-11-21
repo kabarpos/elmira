@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -23,10 +25,14 @@ Route::middleware(['web', 'auth', 'verified'])->group(function () {
 });
 
 // Admin routes
-Route::middleware(['web', 'auth', 'verified'])->prefix('admin')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])
-        ->middleware(\Spatie\Permission\Middleware\PermissionMiddleware::class . ':manage users')
-        ->name('admin.dashboard');
+Route::middleware(['auth', 'web', \Spatie\Permission\Middleware\RoleMiddleware::class.':super-admin|admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // User management routes
+    Route::resource('users', UserController::class);
+    
+    // Role management routes
+    Route::resource('roles', RoleController::class);
 });
 
 // Profile routes

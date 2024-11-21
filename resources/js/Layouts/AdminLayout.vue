@@ -20,9 +20,30 @@
                                 
                                 <template v-if="$page.props.auth.user.roles.includes('super-admin')">
                                     <NavLink :href="route('admin.users.index')" :active="route().current('admin.users.*')">
-                                        Users
+                                        Users Management
+                                    </NavLink>
+                                    <NavLink :href="route('admin.roles.index')" :active="route().current('admin.roles.*')">
+                                        Roles & Permissions
                                     </NavLink>
                                 </template>
+
+                                <!-- Additional Admin Navigation -->
+                                <div class="relative group">
+                                    <button class="flex items-center px-3 py-2 text-sm leading-4 font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition">
+                                        Quick Access
+                                        <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                    <div class="absolute z-50 hidden group-hover:block w-48 rounded-md shadow-lg py-1 bg-white">
+                                        <Link :href="route('user.dashboard')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            User Dashboard
+                                        </Link>
+                                        <Link :href="route('profile.edit')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            Profile Settings
+                                        </Link>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -34,7 +55,6 @@
                                         <span class="inline-flex rounded-md">
                                             <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                                                 {{ $page.props.auth.user.name }}
-
                                                 <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                                                 </svg>
@@ -46,9 +66,11 @@
                                         <DropdownLink :href="route('profile.edit')">
                                             Profile
                                         </DropdownLink>
-                                        <DropdownLink :href="route('logout')" method="post" as="button">
-                                            Log Out
-                                        </DropdownLink>
+                                        <form @submit.prevent="logout">
+                                            <DropdownLink as="button">
+                                                Log Out
+                                            </DropdownLink>
+                                        </form>
                                     </template>
                                 </Dropdown>
                             </div>
@@ -72,6 +94,19 @@
                         <ResponsiveNavLink :href="route('admin.dashboard')" :active="route().current('admin.dashboard')">
                             Dashboard
                         </ResponsiveNavLink>
+                        
+                        <template v-if="$page.props.auth.user.roles.includes('super-admin')">
+                            <ResponsiveNavLink :href="route('admin.users.index')" :active="route().current('admin.users.*')">
+                                Users Management
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink :href="route('admin.roles.index')" :active="route().current('admin.roles.*')">
+                                Roles & Permissions
+                            </ResponsiveNavLink>
+                        </template>
+
+                        <ResponsiveNavLink :href="route('user.dashboard')">
+                            User Dashboard
+                        </ResponsiveNavLink>
                     </div>
 
                     <!-- Responsive Settings Options -->
@@ -89,7 +124,7 @@
                             <ResponsiveNavLink :href="route('profile.edit')">
                                 Profile
                             </ResponsiveNavLink>
-                            <ResponsiveNavLink :href="route('logout')" method="post" as="button">
+                            <ResponsiveNavLink as="button" @click="logout">
                                 Log Out
                             </ResponsiveNavLink>
                         </div>
@@ -114,12 +149,16 @@
 
 <script setup>
 import { ref } from 'vue';
+import { Link } from '@inertiajs/vue3';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
+
+const logout = () => {
+    router.post(route('logout'));
+};
 </script>
