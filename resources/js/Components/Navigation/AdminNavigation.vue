@@ -55,7 +55,7 @@
                         </div>
 
                         <NavLink :href="route('admin.settings.index')" :active="route().current('admin.settings.index')">
-                            Website Settings
+                            Setting
                         </NavLink>
 
                         <NavLink :href="route('user.dashboard')">
