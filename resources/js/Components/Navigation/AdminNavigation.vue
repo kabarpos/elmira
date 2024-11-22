@@ -5,8 +5,23 @@
                 <div class="flex">
                     <!-- Logo -->
                     <div class="shrink-0 flex items-center">
-                        <Link :href="route('admin.dashboard')">
-                            <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800" />
+                        <Link :href="route('admin.dashboard')" class="flex items-center">
+                            <img 
+                                v-if="settings?.logo_url" 
+                                :src="settings.logo_url" 
+                                class="block h-9 w-auto"
+                                alt="Site Logo"
+                            >
+                            <ApplicationLogo 
+                                v-else
+                                class="block h-9 w-auto fill-current text-gray-800" 
+                            />
+                            <span 
+                                v-if="settings?.title"
+                                class="ml-3 text-lg font-semibold text-gray-900"
+                            >
+                                {{ settings.title }}
+                            </span>
                         </Link>
                     </div>
 
@@ -157,6 +172,10 @@ const props = defineProps({
     },
     showingNavigationDropdown: {
         type: Boolean,
+        required: true
+    },
+    settings: {
+        type: Object,
         required: true
     }
 });

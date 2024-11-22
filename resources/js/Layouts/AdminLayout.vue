@@ -3,6 +3,7 @@
         <div class="min-h-screen bg-gray-100">
             <AdminNavigation 
                 :user="$page.props.auth.user"
+                :settings="$page.props.settings"
                 :showing-navigation-dropdown="showingNavigationDropdown"
                 @toggle-navigation="showingNavigationDropdown = !showingNavigationDropdown"
                 @logout="logout"
