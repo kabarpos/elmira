@@ -1,5 +1,5 @@
 <template>
-    <AdminLayout>
+    <AdminLayout ref="layout">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Website Settings
@@ -45,10 +45,45 @@
                                                 <label class="block text-sm font-medium text-gray-700">
                                                     Logo
                                                 </label>
-                                                <div class="mt-1 flex items-center">
-                                                    <img v-if="form.logo" :src="'/storage/' + form.logo" class="h-12 w-auto mr-4">
-                                                    <input type="file" @input="form.logo = $event.target.files[0]" accept="image/*" class="mt-1">
+                                                <div class="mt-1 flex items-center space-x-4">
+                                                    <!-- Current or Preview Logo -->
+                                                    <div v-if="logoPreview || settings?.logo_url" class="h-12 w-auto">
+                                                        <img 
+                                                            :src="logoPreview || settings.logo_url" 
+                                                            class="h-full w-auto object-contain"
+                                                            alt="Logo Preview"
+                                                        >
+                                                    </div>
+                                                    
+                                                    <!-- Upload Input -->
+                                                    <div class="flex-1">
+                                                        <input 
+                                                            type="file" 
+                                                            ref="logoInput"
+                                                            @change="handleLogoChange" 
+                                                            accept="image/*" 
+                                                            class="mt-1 block w-full text-sm text-gray-500
+                                                                file:mr-4 file:py-2 file:px-4
+                                                                file:rounded-md file:border-0
+                                                                file:text-sm file:font-semibold
+                                                                file:bg-indigo-50 file:text-indigo-700
+                                                                hover:file:bg-indigo-100"
+                                                        >
+                                                    </div>
+
+                                                    <!-- Remove Button -->
+                                                    <button 
+                                                        v-if="logoPreview || settings?.logo_url"
+                                                        type="button"
+                                                        @click="removeLogo"
+                                                        class="px-3 py-2 text-sm font-medium text-red-600 hover:text-red-500"
+                                                    >
+                                                        Remove
+                                                    </button>
                                                 </div>
+                                                <p class="mt-2 text-sm text-gray-500">
+                                                    Upload a logo image (PNG, JPG, GIF up to 2MB)
+                                                </p>
                                             </div>
 
                                             <!-- Address -->
@@ -77,8 +112,13 @@
                                         </div>
 
                                         <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                                            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                                Save Settings
+                                            <button 
+                                                type="submit" 
+                                                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                                :disabled="form.processing"
+                                            >
+                                                <span v-if="form.processing">Saving...</span>
+                                                <span v-else>Save Settings</span>
                                             </button>
                                         </div>
                                     </div>
@@ -93,13 +133,17 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
 
 const props = defineProps({
-    settings: Object
+    settings: Object,
+    flash: Object
 })
+
+const logoPreview = ref(null)
+const logoInput = ref(null)
 
 const form = useForm({
     title: props.settings?.title ?? '',
@@ -110,12 +154,38 @@ const form = useForm({
     meta_ads: props.settings?.meta_ads ?? ''
 })
 
+const handleLogoChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+        form.logo = file
+        logoPreview.value = URL.createObjectURL(file)
+    }
+}
+
+const removeLogo = () => {
+    form.logo = null
+    logoPreview.value = null
+    if (logoInput.value) {
+        logoInput.value.value = ''
+    }
+}
+
 const submit = () => {
     form.post(route('admin.settings.update'), {
         preserveScroll: true,
         onSuccess: () => {
-            // Handle success
+            if (logoPreview.value) {
+                URL.revokeObjectURL(logoPreview.value)
+                logoPreview.value = null
+            }
         },
+        onError: (errors) => {
+            // layout.value.toast.showToast({
+            //     type: 'error',
+            //     title: 'Error',
+            //     message: Object.values(errors)[0]
+            // })
+        }
     })
 }
 </script>

@@ -20,12 +20,24 @@
                 <slot />
             </main>
         </div>
+
+        <!-- Toast Component -->
+        <Toast
+            v-if="$page.props.flash.success || $page.props.flash.error"
+            :show="true"
+            :type="$page.props.flash.success ? 'success' : 'error'"
+            :title="$page.props.flash.success ? 'Success' : 'Error'"
+            :message="$page.props.flash.success || $page.props.flash.error"
+            :duration="3000"
+            @close="$page.props.flash = {}"
+        />
     </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import AdminNavigation from '@/Components/Navigation/AdminNavigation.vue';
+import Toast from '@/Components/Toast.vue';
 import { router } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
