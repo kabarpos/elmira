@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\WebsiteSettingController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -44,6 +45,10 @@ Route::middleware(['auth', 'web', \Spatie\Permission\Middleware\RoleMiddleware::
     
     // Role management routes
     Route::resource('roles', RoleController::class);
+
+    // Website Settings routes
+    Route::get('/settings', [WebsiteSettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [WebsiteSettingController::class, 'update'])->name('settings.update');
 
     // Admin Profile routes
     Route::get('/profile', function () {

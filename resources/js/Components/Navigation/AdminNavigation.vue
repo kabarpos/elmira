@@ -39,6 +39,10 @@
                             </Dropdown>
                         </div>
 
+                        <NavLink :href="route('admin.settings.index')" :active="route().current('admin.settings.index')">
+                            Website Settings
+                        </NavLink>
+
                         <NavLink :href="route('user.dashboard')">
                             User Area
                         </NavLink>
@@ -106,6 +110,10 @@
                         </ResponsiveNavLink>
                     </div>
                 </div>
+
+                <ResponsiveNavLink :href="route('admin.settings.index')" :active="route().current('admin.settings.index')">
+                    Website Settings
+                </ResponsiveNavLink>
 
                 <ResponsiveNavLink :href="route('user.dashboard')">
                     User Area
