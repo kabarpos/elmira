@@ -1,4 +1,6 @@
 <template>
+    <Head :title="pageTitle" />
+    
     <AdminLayout ref="layout">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -133,7 +135,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { Head } from '@inertiajs/vue3'
+import { ref, computed, onMounted } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
 
@@ -144,6 +147,11 @@ const props = defineProps({
 
 const logoPreview = ref(null)
 const logoInput = ref(null)
+
+const pageTitle = computed(() => {
+    const websiteTitle = props.settings?.title || 'My Website'
+    return `Website Settings - ${websiteTitle}`
+})
 
 const form = useForm({
     title: props.settings?.title ?? '',

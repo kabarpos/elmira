@@ -5,8 +5,23 @@
                 <div class="flex">
                     <!-- Logo -->
                     <div class="shrink-0 flex items-center">
-                        <Link :href="route('user.dashboard')">
-                            <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800" />
+                        <Link :href="route('user.dashboard')" class="flex items-center">
+                            <img 
+                                v-if="settings?.logo_url" 
+                                :src="settings.logo_url" 
+                                class="block h-9 w-auto"
+                                alt="Site Logo"
+                            >
+                            <ApplicationLogo 
+                                v-else
+                                class="block h-9 w-auto fill-current text-gray-800" 
+                            />
+                            <span 
+                                v-if="settings?.title"
+                                class="ml-3 text-lg font-semibold text-gray-900"
+                            >
+                                {{ settings.title }}
+                            </span>
                         </Link>
                     </div>
 
@@ -45,7 +60,7 @@
                                 <DropdownLink :href="route('user.profile.edit')">
                                     Profile
                                 </DropdownLink>
-                                <DropdownLink as="button" @click="logout">
+                                <DropdownLink href="#" @click="logout">
                                     Log Out
                                 </DropdownLink>
                             </template>
@@ -92,7 +107,7 @@
                     <ResponsiveNavLink :href="route('user.profile.edit')">
                         Profile
                     </ResponsiveNavLink>
-                    <ResponsiveNavLink as="button" @click="logout">
+                    <ResponsiveNavLink href="#" @click="logout">
                         Log Out
                     </ResponsiveNavLink>
                 </div>
@@ -108,10 +123,13 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import ResponsiveNavButton from '@/Components/ResponsiveNavButton.vue';
 
 const props = defineProps({
     user: {
+        type: Object,
+        required: true
+    },
+    settings: {
         type: Object,
         required: true
     },

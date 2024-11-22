@@ -1,5 +1,5 @@
 <template>
-    <Head title="Admin Dashboard" />
+    <Head :title="pageTitle" />
     <AdminLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -35,11 +35,6 @@
                                   class="block px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition">
                                 Manage Users
                             </Link>
-                            <Link v-if="$page.props.auth.user.roles.includes('super-admin')"
-                                  :href="route('admin.roles.index')"
-                                  class="block px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition">
-                                Manage Roles
-                            </Link>
                         </div>
                     </Card>
                 </div>
@@ -50,13 +45,20 @@
 
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
+import { computed } from 'vue'
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import Card from '@/Components/Common/Card.vue';
 
-defineProps({
+const props = defineProps({
     stats: {
         type: Object,
         required: true
-    }
-});
+    },
+    settings: Object
+})
+
+const pageTitle = computed(() => {
+    const websiteTitle = props.settings?.title || 'My Website'
+    return `Admin Dashboard - ${websiteTitle}`
+})
 </script>

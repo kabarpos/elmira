@@ -2,10 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\WebsiteSetting;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Middleware;
+use App\Models\WebsiteSetting;
+use Illuminate\Support\Facades\Storage;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -27,19 +27,16 @@ class HandleInertiaRequests extends Middleware
     /**
      * Define the props that are shared by default.
      *
-     * @return array<string, mixed>
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
      */
     public function share(Request $request): array
     {
         $settings = WebsiteSetting::first();
-        
-        return array_merge(parent::share($request), [
-            'auth' => [
-                'user' => $request->user(),
-                'roles' => $request->user() ? $request->user()->getRoleNames() : [],
-                'permissions' => $request->user() ? $request->user()->getAllPermissions()->pluck('name') : [],
-            ],
-            'settings' => $settings ? [
+        $settingsData = null;
+
+        if ($settings) {
+            $settingsData = [
                 'id' => $settings->id,
                 'title' => $settings->title,
                 'subtitle' => $settings->subtitle,
@@ -48,12 +45,24 @@ class HandleInertiaRequests extends Middleware
                 'address' => $settings->address,
                 'whatsapp' => $settings->whatsapp,
                 'meta_ads' => $settings->meta_ads,
-            ] : null,
-            'flash' => [
-                'message' => session('message'),
-                'success' => session('success'),
-                'error' => session('error'),
+            ];
+        }
+
+        return array_merge(parent::share($request), [
+            'auth' => [
+                'user' => $request->user() ? [
+                    'id' => $request->user()->id,
+                    'name' => $request->user()->name,
+                    'email' => $request->user()->email,
+                    'roles' => $request->user()->roles->pluck('name'),
+                ] : null,
             ],
+            'flash' => [
+                'message' => fn () => $request->session()->get('message'),
+                'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
+            ],
+            'settings' => $settingsData,
         ]);
     }
 }

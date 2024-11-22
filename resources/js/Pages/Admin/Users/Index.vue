@@ -1,5 +1,5 @@
 <template>
-    <Head title="Users Management" />
+    <Head :title="pageTitle" />
     <AdminLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -147,7 +147,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import Card from '@/Components/Common/Card.vue';
@@ -161,7 +161,8 @@ import DangerButton from '@/Components/DangerButton.vue';
 
 const props = defineProps({
     users: Array,
-    roles: Array
+    roles: Array,
+    settings: Object
 });
 
 const showModal = ref(false);
@@ -225,4 +226,9 @@ const deleteUser = () => {
         onSuccess: () => closeDeleteModal(),
     });
 };
+
+const pageTitle = computed(() => {
+    const websiteTitle = props.settings?.title || 'My Website'
+    return `Users - ${websiteTitle}`
+})
 </script>
