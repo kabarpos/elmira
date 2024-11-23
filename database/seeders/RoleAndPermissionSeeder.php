@@ -6,6 +6,8 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class RoleAndPermissionSeeder extends Seeder
 {
@@ -16,6 +18,18 @@ class RoleAndPermissionSeeder extends Seeder
     {
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
+        // Disable foreign key checks and truncate tables
+        Schema::disableForeignKeyConstraints();
+        
+        // Clear existing roles and permissions
+        DB::table('role_has_permissions')->delete();
+        DB::table('model_has_roles')->delete();
+        DB::table('model_has_permissions')->delete();
+        DB::table('roles')->delete();
+        DB::table('permissions')->delete();
+        
+        Schema::enableForeignKeyConstraints();
 
         // Create Permissions
         $permissions = [
@@ -30,6 +44,12 @@ class RoleAndPermissionSeeder extends Seeder
             'create roles',
             'edit roles',
             'delete roles',
+
+            // Permission Management
+            'view permissions',
+            'create permissions',
+            'edit permissions',
+            'delete permissions',
             
             // Content Management
             'view content',
@@ -52,28 +72,35 @@ class RoleAndPermissionSeeder extends Seeder
         }
 
         // Create Roles
-        $superAdmin = Role::create(['name' => 'super-admin']);
-        $admin = Role::create(['name' => 'admin']);
-        $editor = Role::create(['name' => 'editor']);
-        $user = Role::create(['name' => 'user']);
+        $superAdminRole = Role::create(['name' => 'super-admin']);
+        $adminRole = Role::create(['name' => 'admin']);
+        $editorRole = Role::create(['name' => 'editor']);
+        $userRole = Role::create(['name' => 'user']);
 
-        // Assign Permissions to Roles
-        $superAdmin->givePermissionTo(Permission::all());
-        
-        $admin->givePermissionTo([
-            'view users', 'create users', 'edit users',
-            'view roles', 'view content', 'create content', 
-            'edit content', 'delete content', 'view media',
+        // Assign all permissions to super-admin
+        $superAdminRole->givePermissionTo(Permission::all());
+
+        // Assign specific permissions to admin
+        $adminRole->givePermissionTo([
+            'view users',
+            'create users',
+            'edit users',
+            'view roles',
+            'view permissions',
+            'view content', 'create content', 'edit content', 
+            'delete content', 'view media',
             'upload media', 'delete media', 'view settings'
         ]);
-        
-        $editor->givePermissionTo([
+
+        // Assign specific permissions to editor
+        $editorRole->givePermissionTo([
             'view content', 'create content', 'edit content',
             'view media', 'upload media'
         ]);
-        
-        $user->givePermissionTo([
-            'view content', 'view media'
+
+        // Assign basic permissions to user
+        $userRole->givePermissionTo([
+            'view users', 'view content', 'view media'
         ]);
     }
 }
